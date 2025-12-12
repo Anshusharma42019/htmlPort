@@ -1,0 +1,13 @@
+{
+  "name": "anshu-portfolio",
+  "version": "1.0.0",
+  "description": "Premium Portfolio - Innovative Tech Solutions",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required for static site'",
+    "start": "echo 'Static site ready for deployment'"
+  },
+  "keywords": ["portfolio", "web-development", "full-stack"],
+  "author": "Anshu Sharma",
+  "license": "MIT"
+}
