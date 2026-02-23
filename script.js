@@ -67,88 +67,6 @@ window.addEventListener('resize', () => {
     }
 });
 
-// Enhanced animation on scroll
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            
-            // Add staggered animation for child elements
-            const children = entry.target.querySelectorAll('.stagger-item');
-            children.forEach((child, index) => {
-                setTimeout(() => {
-                    child.classList.add('visible');
-                }, index * 100);
-            });
-        }
-    });
-}, observerOptions);
-
-// Observe all animation elements
-const animationClasses = ['.fade-in', '.slide-in-left', '.slide-in-right', '.scale-in', '.bounce-in', '.rotate-in'];
-animationClasses.forEach(className => {
-    document.querySelectorAll(className).forEach(el => {
-        observer.observe(el);
-    });
-});
-
-// Enhanced counter animation with easing
-function animateCounter(element, target) {
-    let current = 0;
-    const duration = 2000; // 2 seconds
-    const startTime = performance.now();
-    
-    function easeOutQuart(t) {
-        return 1 - (--t) * t * t * t;
-    }
-    
-    function updateCounter(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = easeOutQuart(progress);
-        
-        current = Math.floor(easedProgress * target);
-        element.textContent = current;
-        
-        // Add visual feedback
-        element.style.transform = `scale(${1 + (easedProgress * 0.1)})`;
-        element.style.color = `hsl(${45 + (easedProgress * 15)}, 100%, 50%)`;
-        
-        if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-        } else {
-            element.style.transform = 'scale(1)';
-            element.style.color = 'var(--primary-yellow)';
-        }
-    }
-    
-    requestAnimationFrame(updateCounter);
-}
-
-// Start counter animation when stats are visible
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const counters = entry.target.querySelectorAll('.stat-number');
-            counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                animateCounter(counter, target);
-            });
-            statsObserver.unobserve(entry.target);
-        }
-    });
-});
-
-const statsCard = document.querySelector('.stats-card');
-if (statsCard) {
-    statsObserver.observe(statsCard);
-}
-
 // Theme toggle
 const themeToggles = document.querySelectorAll('.theme-toggle');
 
@@ -216,131 +134,54 @@ function showProjectLinks(project) {
     }
 }
 
-// Add interactive animations
-document.addEventListener('DOMContentLoaded', () => {
-    // Add floating animation to feature icons
-    const featureIcons = document.querySelectorAll('.feature-icon');
-    featureIcons.forEach((icon, index) => {
-        setTimeout(() => {
-            icon.classList.add('float');
-        }, index * 200);
-    });
-    
-    // Add pulse animation to CTA buttons
-    const ctaButtons = document.querySelectorAll('.btn-primary');
-    ctaButtons.forEach(btn => {
-        btn.addEventListener('mouseenter', () => {
-            btn.classList.add('pulse');
-        });
-        btn.addEventListener('mouseleave', () => {
-            btn.classList.remove('pulse');
-        });
-    });
-    
-
-    
-    // Add gradient animation to role text
-    const roleText = document.querySelector('.role-text');
-    if (roleText) {
-        roleText.classList.add('animated-gradient');
-    }
-    
-    // Add glow effect to availability card
-    const availabilityCard = document.querySelector('.availability-card');
-    if (availabilityCard) {
-        availabilityCard.classList.add('glow');
-    }
-    
-    // Smooth scroll with animation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-                // Add bounce animation to target section
-                target.style.animation = 'bounce-in 0.6s ease';
+// Contact form submission
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(contactForm);
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                showToast('Message has been submitted successfully!', 'success');
+                contactForm.reset();
                 setTimeout(() => {
-                    target.style.animation = '';
-                }, 600);
+                    window.location.reload();
+                }, 2000);
+            } else {
+                showToast('Failed to send message. Please try again.', 'error');
             }
-        });
-    });
-    
-    // Add parallax effect to hero section
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const heroContent = document.querySelector('.hero-content');
-        const statsCard = document.querySelector('.stats-card');
-        
-        if (heroContent) {
-            heroContent.style.transform = `translateY(${scrolled * 0.1}px)`;
-        }
-        
-        if (statsCard) {
-            statsCard.style.transform = `translateY(${scrolled * -0.05}px)`;
+        } catch (error) {
+            showToast('Error sending message. Please try again.', 'error');
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
     });
+}
+
+// Toast notification
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
     
-    // Add mouse follow effect
-    let mouseX = 0, mouseY = 0;
-    let ballX = 0, ballY = 0;
-    const speed = 0.1;
+    setTimeout(() => toast.classList.add('show'), 100);
     
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-    
-    function animate() {
-        ballX += (mouseX - ballX) * speed;
-        ballY += (mouseY - ballY) * speed;
-        
-        const cursor = document.querySelector('.custom-cursor');
-        if (cursor) {
-            cursor.style.left = ballX + 'px';
-            cursor.style.top = ballY + 'px';
-        }
-        
-        requestAnimationFrame(animate);
-    }
-    
-    // Create custom cursor
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.style.cssText = `
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        background: var(--primary-yellow);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 0.7;
-        transition: transform 0.1s ease;
-        display: none;
-    `;
-    document.body.appendChild(cursor);
-    
-    // Show custom cursor on desktop
-    if (window.innerWidth > 768) {
-        cursor.style.display = 'block';
-        animate();
-        
-        // Hide default cursor on interactive elements
-        document.querySelectorAll('a, button, .btn, .project-card, .stat-box').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(1.5)';
-                cursor.style.background = '#ff6b35';
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
-                cursor.style.background = 'var(--primary-yellow)';
-            });
-        });
-    }
-});
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
