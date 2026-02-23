@@ -1032,3 +1032,86 @@ html {
 .toast-error {
     background-color: #ef4444;
 }
+
+/* Experience Section */
+.experience {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.experience-timeline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.experience-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+@media (min-width: 769px) {
+    .experience-timeline {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.experience-icon {
+    font-size: 2rem;
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-radius: 10px;
+}
+
+.experience-content {
+    flex: 1;
+    text-align: left;
+}
+
+.experience-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.experience-content .company {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #818cf8;
+    margin-bottom: 5px;
+}
+
+.experience-content .duration {
+    font-size: 0.95rem;
+    color: var(--gray);
+    margin-bottom: 12px;
+}
+
+.experience-content .description {
+    font-size: 1rem;
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+.experience-content .achievements {
+    margin-top: 15px;
+    padding-left: 20px;
+}
+
+.experience-content .achievements li {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
