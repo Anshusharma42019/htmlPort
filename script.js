@@ -109,17 +109,17 @@ if (savedTheme === 'dark') {
 // Project image click handler
 function showProjectLinks(project) {
     const projects = {
-        ecommerce: {
-            github: 'https://github.com/anshusharma/ecommerce-platform',
-            demo: 'ecommerce-demo.html'
+        HMS: {
+            github: 'https://github.com/Anshusharma42019/HSMFrontend',
+            demo: 'https://hsm-frontend-kappa.vercel.app'
         },
-        banking: {
-            github: 'https://github.com/anshusharma/banking-app',
-            demo: 'banking-demo.html'
+        CPSSYSTEM: {
+            github: 'https://github.com/Anshusharma42019/CPSFrontend',
+            demo: 'https://cps-frontend.vercel.app'
         },
-        dashboard: {
-            github: 'https://github.com/anshusharma/cloud-dashboard',
-            demo: 'dashboard-demo.html'
+        CorporateTech: {
+            github: 'https://github.com/Anshusharma42019/ourCompany',
+            demo: 'https://our-company-virid.vercel.app'
         }
     };
     
